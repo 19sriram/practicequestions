@@ -85,11 +85,77 @@ c.add(9);
 
 // now we can access the private variable in the following way
 c.retrieve(); // => The counter is currently at: 14
-
-
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+1)  // debounce function that will wrap our event
+function debounce(fn, delay) {
+  // maintain a timer
+  let timer = null;
+  // closure function that has access to timer
+  return function() {
+    // get the scope and parameters of the function 
+    // via 'this' and 'arguments'
+    let context = this;
+    let args = arguments;
+    // if event is called, clear the timer and start over
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      fn.apply(context, args);
+    }, delay);
+  }
+}
 
+// function to be called when user scrolls
+function foo() {
+  console.log('You are scrolling!');
+}
+
+// wrap our function in a debounce to fire once 2 seconds have gone by
+let elem = document.getElementById('container');
+elem.addEventListener('scroll', debounce(foo, 2000));
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+1) class-constructor and factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e
+// class
+class ClassCar {
+  drive () {
+    console.log('Vroom!');
+  }
+}
+
+const car1 = new ClassCar();
+console.log(car1.drive());
+
+
+// constructor
+function ConstructorCar () {}
+
+ConstructorCar.prototype.drive = function () {
+  console.log('Vroom!');
+};
+
+const car2 = new ConstructorCar();
+console.log(car2.drive());
+
+
+// factory
+const proto = {
+  drive () {
+    console.log('Vroom!');
+  }
+};
+
+function factoryCar () {
+  return Object.create(proto);
+}
+
+const car3 = factoryCar();
+console.log(car3.drive());
 
 LINKS:
 
 1) https://medium.freecodecamp.org/3-questions-to-watch-out-for-in-a-javascript-interview-725012834ccb
+
+2) https://codeburst.io/throttling-and-debouncing-in-javascript-b01cad5c8edf
+
+3) https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e
+
+4) http://thatjsdude.com/interview/index.html
